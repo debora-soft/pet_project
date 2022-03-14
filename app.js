@@ -4,6 +4,11 @@ import cors from 'cors';
 import cookieParser from 'cookie-parser';
 import DB from 'mysql2';
 
+app.use(express.json());
+app.use(cookieParser());
+app.use(cors());
+
+
 const connection = DB.createConnection({
   host: 'localhost',
   user: 'root',
