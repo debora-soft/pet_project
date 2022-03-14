@@ -2,6 +2,22 @@ import { config } from 'dotenv';
 import express from 'express';
 import cors from 'cors';
 import cookieParser from 'cookie-parser';
+import DB from 'mysql2';
+
+const connection = DB.createConnection({
+  host: 'localhost',
+  user: 'root',
+  password: 'password',
+  database: 'zimad_test'
+});
+connection.connect((err) => {
+  if(err){
+    console.log(err);
+  } 
+  else{
+    console.log('Connection to the database has occurred');
+  }
+});
 
 const PORT = process.env.PORT || 8000
 
