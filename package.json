@@ -1,12 +1,12 @@
 {
-  
+  "module": "esnext",
   "name": "zimad",
   "version": "1.0.0",
   "description": "test task",
-  "main": "index.js",
+  "main": "app.js",
   "scripts": {
     "build": "tsc",
-    "start": "nodemon build/src/app.js"
+    "start": "nodemon build/app.js"
   },
   "author": "Dmitry Kolosov",
   "license": "ISC",

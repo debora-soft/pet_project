@@ -1,8 +1,22 @@
-import { Entity, PrimaryGeneratedColumn } from "typeorm";
+import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity()
 export class File {
-  @PrimaryGeneratedColumn()
-  id!: number
+  @PrimaryGeneratedColumn("uuid")
+  id!: number;
 
+  @Column()
+  name!: string;
+
+  @Column()
+  file_extension!: string;
+
+  @Column()
+  MIME_type!: string;
+
+  @Column()
+  size!: number;
+
+  @CreateDateColumn()
+  date!: Date;
 }
