@@ -1,11 +1,12 @@
 import { Express } from "express";
 import { UserService } from "../service/user_service";
+import { validationResult } from "express-validator";
 
 const userService = new UserService()
 export class userControllers {
   async registration(req: any, res: any, next: any) {
     try {
-        //console.log("registration ..", req.body)
+        
         const {id, password} = req.body;
         const userData = await userService.registration(id, password);
         res.cookie('refreshToken', userData.refreshToken, {maxAge: 30 * 24 * 60 * 60 * 1000, httpOnly: true})
@@ -14,6 +15,8 @@ export class userControllers {
   }
   async login(req: any, res: any, next: any) {
     try {
+       const { id, password } = req.body;
+       const userData = await userService.login(id, password)
     } catch (e) {}
   }
   async logout(req: any, res: any, next: any) {

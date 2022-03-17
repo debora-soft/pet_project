@@ -2,11 +2,16 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.userControllers = void 0;
 const user_service_1 = require("../service/user_service");
+const express_validator_1 = require("express-validator");
 const userService = new user_service_1.UserService();
 class userControllers {
     async registration(req, res, next) {
         try {
-            //console.log("registration ..", req.body)
+            const errors = (0, express_validator_1.validationResult)(req);
+            console.log(errors);
+            if (!errors.isEmpty()) {
+                res.end(errors);
+            }
             const { id, password } = req.body;
             const userData = await userService.registration(id, password);
             res.cookie('refreshToken', userData.refreshToken, { maxAge: 30 * 24 * 60 * 60 * 1000, httpOnly: true });

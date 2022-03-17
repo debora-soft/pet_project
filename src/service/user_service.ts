@@ -22,5 +22,8 @@ export class UserService {
       .catch((error) => console.log(error));     
     return tokens;
   }
+  async login(id: string, password: string){
+
+  }
 }
 

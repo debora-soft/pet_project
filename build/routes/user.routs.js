@@ -6,15 +6,15 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.routerUser = void 0;
 const express_1 = __importDefault(require("express"));
 const userControlers_1 = require("../controllers/userControlers");
+const express_validator_1 = require("express-validator");
 exports.routerUser = express_1.default.Router();
 const controller = new userControlers_1.userControllers();
-exports.routerUser.post('/registration', controller.registration);
+exports.routerUser.post('/registration', (0, express_validator_1.body)('id').isString, controller.registration);
 exports.routerUser.post('/login', controller.login);
 exports.routerUser.post('/logout', controller.logout);
 exports.routerUser.post('/refresh', controller.refresh);
 exports.routerUser.get('/users', controller.users);
 exports.routerUser.get('/test', (req, res) => {
-    console.log("OK");
+    console.log(typeof (req));
     res.send("Ok");
 });
-//module.exports = routerUuser; 
