@@ -1,0 +1,9 @@
+{
+  "type": "mysql",
+  "host": "localhost",
+  "username": "root",
+  "password": "password",
+  "database": "zimad_test",
+  "entities": ["build/models/*.js"],
+  "synchronize": true  
+}

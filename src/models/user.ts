@@ -1,15 +1,15 @@
 import { Column, Entity, PrimaryColumn } from "typeorm";
 @Entity()
 export class User {
-  @PrimaryColumn()
+  @PrimaryColumn({unique: true})
   id!: string;
 
   @Column()
-  passwoard!: string;
+  password!: string;
 
-  @Column()
+  @Column({default: ''})
   token?:string;
 
-  @Column()
+  @Column({default: ''})
   refreshToken?: string;
   }

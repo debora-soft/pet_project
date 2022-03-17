@@ -36,7 +36,11 @@ __decorate([
 __decorate([
     (0, typeorm_1.CreateDateColumn)(),
     __metadata("design:type", Date)
-], File.prototype, "date", void 0);
+], File.prototype, "createDate", void 0);
+__decorate([
+    (0, typeorm_1.UpdateDateColumn)(),
+    __metadata("design:type", Date)
+], File.prototype, "updateDate", void 0);
 File = __decorate([
     (0, typeorm_1.Entity)()
 ], File);
