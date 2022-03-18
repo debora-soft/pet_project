@@ -22,7 +22,36 @@ export class UserService {
       .catch((error) => console.log(error));     
     return tokens;
   }
-  async login(id: string, password: string){
+  async login(id: string, password: string, res: any){
+
+    const tokens = tokenService.generateToken({ id });    
+    let repos = getRepository(User)     
+    let user = await repos.findOne({ id });
+    if (!user) {
+          res.status(404).send("User not found");
+          res.end();
+        }  else {
+        const isPassEq = await bcrypt.compare(password, user.password);
+          if (!isPassEq) {
+            res.status(401).send("Unautorized")                   
+            } else {
+              const token =  tokenService.generateToken({ id });
+              res.cookie(
+                "refreshToken",
+                token.refreshToken,
+                "accessToken",
+                token.accessToken,
+                { maxAge: 30 * 24 * 60 * 60 * 1000, httpOnly: true }
+              );
+              res.json(user);
+              res.end();
+            }
+          
+        }
+        
+    
+     
+    
 
   }
 }

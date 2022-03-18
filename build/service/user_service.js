@@ -27,5 +27,26 @@ class UserService {
             .catch((error) => console.log(error));
         return tokens;
     }
+    async login(id, password, res) {
+        const tokens = tokenService.generateToken({ id });
+        let repos = (0, typeorm_1.getRepository)(user_1.User);
+        let user = await repos.findOne({ id });
+        if (!user) {
+            res.status(404).send("User not found");
+            res.end();
+        }
+        else {
+            const isPassEq = await bcrypt_1.default.compare(password, user.password);
+            if (!isPassEq) {
+                res.status(401).send("Unautorized");
+            }
+            else {
+                const token = tokenService.generateToken({ id });
+                res.cookie("refreshToken", token.refreshToken, "accessToken", token.accessToken, { maxAge: 30 * 24 * 60 * 60 * 1000, httpOnly: true });
+                res.json(user);
+                res.end();
+            }
+        }
+    }
 }
 exports.UserService = UserService;

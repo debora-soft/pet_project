@@ -20,7 +20,7 @@ app.post('/', (req: any, res:any) => {
   res.send("123")
 })
 
-
+ createConnection()
 
 const PORT = process.env.PORT || 7000;
 

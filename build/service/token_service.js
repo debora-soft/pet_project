@@ -14,7 +14,5 @@ class TokenService {
             refreshToken,
         };
     }
-    async saveToken(userId, refreshToken, accessToken) {
-    }
 }
 exports.TokenService = TokenService;
