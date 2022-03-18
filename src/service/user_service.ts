@@ -6,22 +6,26 @@ import { Request, Response } from "express";
 const tokenService = new TokenService();
 
 export class UserService {
-  async registration(id: string, password: string, res: Response):Promise<User> {
-    const tokens = tokenService.generateToken({ id });   
-        let repos = getRepository(User);
-        
-        let candidat = await repos.findOne({ id });
-        if (candidat) {
-          res.status(400).send("User already exists");
-        }
-        const hashPassword = await bcrypt.hash(password, 3);
-        const newUser = await repos.save({
-          id,
-          password: hashPassword,
-          token: tokens.accessToken,
-          refreshToken: tokens.refreshToken,
-        });
-     
+  async registration(
+    id: string,
+    password: string,
+    res: Response
+  ): Promise<User> {
+    const tokens = tokenService.generateToken({ id });
+    let repos = getRepository(User);
+
+    let candidat = await repos.findOne({ id });
+    if (candidat) {
+      res.status(400).send("User already exists");
+    }
+    const hashPassword = await bcrypt.hash(password, 3);
+    const newUser = await repos.save({
+      id,
+      password: hashPassword,
+      token: tokens.accessToken,
+      refreshToken: tokens.refreshToken,
+    });
+
     return newUser;
   }
   async login(id: string, password: string, res: Response) {
@@ -40,18 +44,39 @@ export class UserService {
           maxAge: 30 * 24 * 60 * 60 * 1000,
           httpOnly: true,
         });
-        res.json(user);
+        res.json(token.accessToken);
         res.end();
       }
     }
   }
-  async logout(refreshToken: string):Promise<UpdateResult> {
+  async logout(refreshToken: string): Promise<UpdateResult> {
     let repos = getRepository(User);
-    
-    
-    const updateResponse = await repos.update({refreshToken: refreshToken}, {refreshToken: ' '})
 
-    return updateResponse
+    const updateResponse = await repos.update(
+      { refreshToken: refreshToken },
+      { refreshToken: " " }
+    );
 
+    return updateResponse;
   }
+  async refresh(refreshToken: string, res: Response) {
+    if(!refreshToken){
+       res.status(401).send("Unautorized");
+    }
+    const userData =  tokenService.validtionRefreshToken(refreshToken)
+    const tokenInDB = await tokenService.findeToken(refreshToken)
+    if(!userData || !tokenInDB){
+       res.status(401).send("Unautorized");
+    }
+    const user = await getRepository(User).findOne({refreshToken: tokenInDB?.refreshToken})
+    const id = user?.id
+    const token = tokenService.generateToken({ id });
+    res.cookie("refreshToken", token.refreshToken, {
+      maxAge: 30 * 24 * 60 * 60 * 1000,
+      httpOnly: true,
+    });
+    res.json(token.accessToken);
+    res.end();
+
+  };
 }

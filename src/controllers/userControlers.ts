@@ -28,7 +28,7 @@ export class userControllers {
         res.status(400).send(JSON.stringify(errors));
       }
       const { id, password } = req.body;
-      const userData = await userService.login(id, password, res);
+      await userService.login(id, password, res);
     } catch (e) {}
   }
   async logout(req: Request, res: Response, next: NextFunction) {
@@ -41,6 +41,9 @@ export class userControllers {
   }
   async refresh(req: Request, res: Response, next: NextFunction) {
     try {
+        const {refreshToken} = req.cookies;
+        const userData = await userService.refresh(refreshToken, res);
+        
     } catch (e) {}
   }
   async users(req: Request, res: Response, next: NextFunction) {
