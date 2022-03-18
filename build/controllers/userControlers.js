@@ -7,16 +7,17 @@ const userService = new user_service_1.UserService();
 class userControllers {
     async registration(req, res, next) {
         try {
-            console.log(req);
             const errors = (0, express_validator_1.validationResult)(req);
             if (!errors.isEmpty()) {
-                res.status(400).send(errors.array);
+                res.status(400).send(JSON.stringify(errors));
                 res.end();
-                next();
             }
             const { id, password } = req.body;
-            const userData = await userService.registration(id, password);
-            res.cookie('refreshToken', userData.refreshToken, 'accessToken', userData.accessToken, { maxAge: 30 * 24 * 60 * 60 * 1000, httpOnly: true });
+            const userData = await userService.registration(id, password, res);
+            res.cookie("refreshToken", userData.refreshToken, {
+                maxAge: 30 * 24 * 60 * 60 * 1000,
+                httpOnly: true,
+            });
             res.json(userData);
         }
         catch (e) { }
@@ -34,6 +35,10 @@ class userControllers {
     }
     async logout(req, res, next) {
         try {
+            const { refreshToken } = req.cookies;
+            const toResponse = await userService.logout(refreshToken);
+            res.clearCookie("refreshToken");
+            res.json(toResponse);
         }
         catch (e) { }
     }
