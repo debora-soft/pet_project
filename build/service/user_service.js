@@ -15,7 +15,7 @@ class UserService {
         let repos = (0, typeorm_1.getRepository)(user_1.User);
         let candidat = await repos.findOne({ id });
         if (candidat) {
-            res.status(400).send("User already exists");
+            res.status(400).json("User already exists");
         }
         const hashPassword = await bcrypt_1.default.hash(password, 3);
         const newUser = await repos.save({

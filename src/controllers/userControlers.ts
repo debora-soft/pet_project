@@ -1,10 +1,13 @@
 import { Request, Response, NextFunction } from "express";
 import { UserService } from "../service/user_service";
+import { FileService } from "../service/file_service";
 import { validationResult } from "express-validator";
 import { getRepository } from "typeorm";
 import { User } from "../models/user";
+import { File } from "../models/file";
 
 const userService = new UserService();
+const fileService = new FileService();
 export class userControllers {
   async registration(req: Request, res: Response, next: NextFunction) {
     try {
@@ -54,11 +57,42 @@ export class userControllers {
     } catch (e) {}
   }
   async upload(req: Request, res: Response, next: NextFunction) {
-     try {
-      const dataFromFile = req.file
-     res.end();
-     } catch (e) {}
-  };
-}
+    try {
+      const fileData = await fileService.upload(req, res);
+      if (fileData) {
+        res.json(fileData);
+      } else {
+        res.status(500).json("Не удалось сохранить файл");
+      }
+    } catch (e) {}
+  }
+  async allFile(req: Request, res: Response, next: NextFunction) {
+    const allFile: File[] = await fileService.listFile();
+    let list_size: number = Number(req.params.list_size) | 10;
+    const page: number = Number(req.params.page) | 1;
+    let offset: number = page * 10;
+    const fileToReturn: Array<File> = [];
+    if (allFile.length === 0) {
+      res.json("Not files");
+    } else {
+      const count:number = allFile.length;
+      if (allFile.length < offset) {
+        offset = allFile.length - (offset - allFile.length) - 1;
+      }
+      if (allFile.length < list_size) {
+        list_size = allFile.length;
+      }
+      if (allFile.length === offset) {
+        offset = offset;
+      }
+      if (allFile.length < offset + list_size) {
+        list_size = Math.abs(offset - allFile.length);
+      }
+      for (let i = offset; i < offset + list_size; i++) {
+        fileToReturn.push(allFile[i]);
+      }
 
-//module.exports = new userControllers();
+      res.json(fileToReturn);
+    }
+  }
+}

@@ -2,10 +2,12 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.userControllers = void 0;
 const user_service_1 = require("../service/user_service");
+const file_service_1 = require("../service/file_service");
 const express_validator_1 = require("express-validator");
 const typeorm_1 = require("typeorm");
 const user_1 = require("../models/user");
 const userService = new user_service_1.UserService();
+const fileService = new file_service_1.FileService();
 class userControllers {
     async registration(req, res, next) {
         try {
@@ -60,12 +62,44 @@ class userControllers {
     }
     async upload(req, res, next) {
         try {
-            const dataFromFile = req.file;
-            res.end();
+            const fileData = await fileService.upload(req, res);
+            if (fileData) {
+                res.json(fileData);
+            }
+            else {
+                res.status(500).json("Не удалось сохранить файл");
+            }
         }
         catch (e) { }
     }
-    ;
+    async allFile(req, res, next) {
+        const allFile = await fileService.listFile();
+        let list_size = Number(req.params.list_size) | 10;
+        const page = Number(req.params.page) | 1;
+        let offset = page * 10;
+        const fileToReturn = [];
+        if (allFile.length === 0) {
+            res.json("Not files");
+        }
+        else {
+            const count = allFile.length;
+            if (allFile.length < offset) {
+                offset = allFile.length - (offset - allFile.length) - 1;
+            }
+            if (allFile.length < list_size) {
+                list_size = allFile.length;
+            }
+            if (allFile.length === offset) {
+                offset = offset;
+            }
+            if (allFile.length < offset + list_size) {
+                list_size = Math.abs(offset - allFile.length);
+            }
+            for (let i = offset; i < offset + list_size; i++) {
+                fileToReturn.push(allFile[i]);
+            }
+            res.json(fileToReturn);
+        }
+    }
 }
 exports.userControllers = userControllers;
-//module.exports = new userControllers();

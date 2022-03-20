@@ -15,6 +15,8 @@ routerUser.post('/logout', controller.logout);
 routerUser.post('/refresh', controller.refresh);
 routerUser.get('/users', accessTokenVerification, controller.users);
 
-routerUser.post('/file/upload', upl.single('filedata'), controller.upload)
+routerUser.post('/file/upload', upl.single('filedata'), controller.upload);
+routerUser.get('/file/list', controller.allFile);
+
 
  

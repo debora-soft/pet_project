@@ -1,7 +1,7 @@
 import { User } from "../models/user";
 import bcrypt from "bcrypt";
 import { TokenService } from "../service/token_service";
-import { getRepository, createConnection, UpdateResult } from "typeorm";
+import { getRepository, UpdateResult } from "typeorm";
 import { Request, Response } from "express";
 const tokenService = new TokenService();
 
@@ -16,7 +16,7 @@ export class UserService {
 
     let candidat = await repos.findOne({ id });
     if (candidat) {
-      res.status(400).send("User already exists");
+      res.status(400).json("User already exists");
     }
     const hashPassword = await bcrypt.hash(password, 3);
     const newUser = await repos.save({
@@ -79,4 +79,5 @@ export class UserService {
     res.end();
 
   };
+  
 }

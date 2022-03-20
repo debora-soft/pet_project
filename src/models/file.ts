@@ -22,5 +22,8 @@ export class File {
 
   @UpdateDateColumn()
   updateDate!: Date;
+
+  @Column()
+  path!: string;
   
 }
