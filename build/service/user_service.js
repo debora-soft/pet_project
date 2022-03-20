@@ -44,17 +44,35 @@ class UserService {
                     maxAge: 30 * 24 * 60 * 60 * 1000,
                     httpOnly: true,
                 });
-                res.json(user);
+                res.json(token.accessToken);
                 res.end();
             }
         }
     }
     async logout(refreshToken) {
         let repos = (0, typeorm_1.getRepository)(user_1.User);
-        let user = repos.findOne({ refreshToken });
-        console.log(user);
-        const updateResponse = await repos.update({ refreshToken: refreshToken }, { refreshToken: ' ' });
+        const updateResponse = await repos.update({ refreshToken: refreshToken }, { refreshToken: " " });
         return updateResponse;
     }
+    async refresh(refreshToken, res) {
+        if (!refreshToken) {
+            res.status(401).send("Unautorized");
+        }
+        const userData = tokenService.validtionRefreshToken(refreshToken);
+        const tokenInDB = await tokenService.findeToken(refreshToken);
+        if (!userData || !tokenInDB) {
+            res.status(401).send("Unautorized");
+        }
+        const user = await (0, typeorm_1.getRepository)(user_1.User).findOne({ refreshToken: tokenInDB === null || tokenInDB === void 0 ? void 0 : tokenInDB.refreshToken });
+        const id = user === null || user === void 0 ? void 0 : user.id;
+        const token = tokenService.generateToken({ id });
+        res.cookie("refreshToken", token.refreshToken, {
+            maxAge: 30 * 24 * 60 * 60 * 1000,
+            httpOnly: true,
+        });
+        res.json(token.accessToken);
+        res.end();
+    }
+    ;
 }
 exports.UserService = UserService;

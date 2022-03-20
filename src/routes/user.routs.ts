@@ -1,11 +1,8 @@
 import  express from "express";
 import { userControllers } from "../controllers/userControlers";
 import { body } from "express-validator";
-
-interface loginData {
-  id: string,
-  password: string
-}
+import { accessTokenVerification } from "../middleware/auth";
+import { upl } from "../middleware/upload";
 
 
 export const routerUser = express.Router();
@@ -16,9 +13,8 @@ routerUser.post('/registration', body("id").isString(), body("password").isStrin
 routerUser.post('/login', body("id").isString(), body("password").isString(), controller.login);
 routerUser.post('/logout', controller.logout);
 routerUser.post('/refresh', controller.refresh);
-routerUser.get('/users', controller.users);
-routerUser.get('/test', (req, res) => {
-  console.log(typeof(req));
-  res.send("Ok")
-})
+routerUser.get('/users', accessTokenVerification, controller.users);
+
+routerUser.post('/file/upload', upl.single('filedata'), controller.upload)
+
  

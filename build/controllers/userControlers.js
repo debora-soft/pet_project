@@ -3,6 +3,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.userControllers = void 0;
 const user_service_1 = require("../service/user_service");
 const express_validator_1 = require("express-validator");
+const typeorm_1 = require("typeorm");
+const user_1 = require("../models/user");
 const userService = new user_service_1.UserService();
 class userControllers {
     async registration(req, res, next) {
@@ -29,7 +31,7 @@ class userControllers {
                 res.status(400).send(JSON.stringify(errors));
             }
             const { id, password } = req.body;
-            const userData = await userService.login(id, password, res);
+            await userService.login(id, password, res);
         }
         catch (e) { }
     }
@@ -44,17 +46,26 @@ class userControllers {
     }
     async refresh(req, res, next) {
         try {
+            const { refreshToken } = req.cookies;
+            const userData = await userService.refresh(refreshToken, res);
         }
         catch (e) { }
     }
     async users(req, res, next) {
         try {
-            res.send("Hello");
+            const users = await (0, typeorm_1.getRepository)(user_1.User).find();
+            res.json(users);
         }
-        catch (e) {
-            console.log(e);
-        }
+        catch (e) { }
     }
+    async upload(req, res, next) {
+        try {
+            const dataFromFile = req.file;
+            res.end();
+        }
+        catch (e) { }
+    }
+    ;
 }
 exports.userControllers = userControllers;
 //module.exports = new userControllers();

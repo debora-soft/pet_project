@@ -1,6 +1,8 @@
 import { Request, Response, NextFunction } from "express";
 import { UserService } from "../service/user_service";
 import { validationResult } from "express-validator";
+import { getRepository } from "typeorm";
+import { User } from "../models/user";
 
 const userService = new UserService();
 export class userControllers {
@@ -41,18 +43,22 @@ export class userControllers {
   }
   async refresh(req: Request, res: Response, next: NextFunction) {
     try {
-        const {refreshToken} = req.cookies;
-        const userData = await userService.refresh(refreshToken, res);
-        
+      const { refreshToken } = req.cookies;
+      const userData = await userService.refresh(refreshToken, res);
     } catch (e) {}
   }
   async users(req: Request, res: Response, next: NextFunction) {
     try {
-      res.send("Hello");
-    } catch (e) {
-      console.log(e);
-    }
+      const users = await getRepository(User).find();
+      res.json(users);
+    } catch (e) {}
   }
+  async upload(req: Request, res: Response, next: NextFunction) {
+     try {
+      const dataFromFile = req.file
+     res.end();
+     } catch (e) {}
+  };
 }
 
 //module.exports = new userControllers();

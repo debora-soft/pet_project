@@ -4,21 +4,22 @@ import express from "express";
 import cors from "cors";
 import cookieParser from "cookie-parser";
 import {routerUser} from './routes/user.routs'
+import multer from "multer";
 
-import { createConnection, Connection } from "typeorm";
-//import { File } from "./models/file";
-import { User } from "./models/user";
+
+import { createConnection} from "typeorm";
+
+
 
 const app = express();
 env.config();
+
+app.use(express.static(__dirname));
+// app.use(multer({ dest: "uploads" }).single("filedata"));
 app.use(express.json());
 app.use(cookieParser());
 app.use(cors());
 app.use('/api', routerUser);
-app.post('/', (req: any, res:any) => {
-  console.log(req.body);
-  res.send("123")
-})
 
  createConnection()
 
