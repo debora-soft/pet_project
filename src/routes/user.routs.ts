@@ -15,12 +15,13 @@ routerUser.post('/logout', controller.logout);
 routerUser.post('/refresh', controller.refresh);
 routerUser.get('/users', accessTokenVerification, controller.users);
 
-routerUser.post('/file/upload', upl.single('filedata'), controller.upload);
-routerUser.get('/file/list', controller.allFile);
-routerUser.delete('/file/delete/:id', controller.deleteFile);
-routerUser.put('/file/update/:id', upl.single('filedata'), controller.updateFile);
-routerUser.get('/file/:id', controller.fileInfo);
-routerUser.get('/file/download/:id', controller.getFile);
+routerUser.post('/file/upload', accessTokenVerification, upl.single('filedata'), controller.upload);
+routerUser.get('/file/list', accessTokenVerification, controller.allFile);
+routerUser.delete('/file/delete/:id', accessTokenVerification, controller.deleteFile);
+routerUser.put('/file/update/:id', accessTokenVerification, upl.single('filedata'), controller.updateFile);
+routerUser.get("/file/:id", accessTokenVerification, controller.fileInfo);
+routerUser.get('/file/download/:id', accessTokenVerification, controller.getFile);
+routerUser.get("/info", accessTokenVerification, controller.info);
 
 
  

@@ -16,9 +16,10 @@ exports.routerUser.post('/login', (0, express_validator_1.body)("id").isString()
 exports.routerUser.post('/logout', controller.logout);
 exports.routerUser.post('/refresh', controller.refresh);
 exports.routerUser.get('/users', auth_1.accessTokenVerification, controller.users);
-exports.routerUser.post('/file/upload', upload_1.upl.single('filedata'), controller.upload);
-exports.routerUser.get('/file/list', controller.allFile);
-exports.routerUser.delete('/file/delete/:id', controller.deleteFile);
-exports.routerUser.put('/file/update/:id', upload_1.upl.single('filedata'), controller.updateFile);
-exports.routerUser.get('/file/:id', controller.fileInfo);
-exports.routerUser.get('/file/download/:id', controller.getFile);
+exports.routerUser.post('/file/upload', auth_1.accessTokenVerification, upload_1.upl.single('filedata'), controller.upload);
+exports.routerUser.get('/file/list', auth_1.accessTokenVerification, controller.allFile);
+exports.routerUser.delete('/file/delete/:id', auth_1.accessTokenVerification, controller.deleteFile);
+exports.routerUser.put('/file/update/:id', auth_1.accessTokenVerification, upload_1.upl.single('filedata'), controller.updateFile);
+exports.routerUser.get("/file/:id", auth_1.accessTokenVerification, controller.fileInfo);
+exports.routerUser.get('/file/download/:id', auth_1.accessTokenVerification, controller.getFile);
+exports.routerUser.get("/info", auth_1.accessTokenVerification, controller.info);

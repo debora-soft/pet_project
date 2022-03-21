@@ -8,6 +8,7 @@ const user_1 = require("../models/user");
 const bcrypt_1 = __importDefault(require("bcrypt"));
 const token_service_1 = require("../service/token_service");
 const typeorm_1 = require("typeorm");
+const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const tokenService = new token_service_1.TokenService();
 class UserService {
     async registration(id, password, res) {
@@ -63,7 +64,9 @@ class UserService {
         if (!userData || !tokenInDB) {
             res.status(401).send("Unautorized");
         }
-        const user = await (0, typeorm_1.getRepository)(user_1.User).findOne({ refreshToken: tokenInDB === null || tokenInDB === void 0 ? void 0 : tokenInDB.refreshToken });
+        const user = await (0, typeorm_1.getRepository)(user_1.User).findOne({
+            refreshToken: tokenInDB === null || tokenInDB === void 0 ? void 0 : tokenInDB.refreshToken,
+        });
         const id = user === null || user === void 0 ? void 0 : user.id;
         const token = tokenService.generateToken({ id });
         res.cookie("refreshToken", token.refreshToken, {
@@ -73,6 +76,11 @@ class UserService {
         res.json(token.accessToken);
         res.end();
     }
-    ;
+    async info(req, res) {
+        const { refreshToken } = req.cookies;
+        const decodeJWT = jsonwebtoken_1.default.decode(refreshToken);
+        const id = JSON.parse(JSON.stringify(decodeJWT));
+        res.json(id.id);
+    }
 }
 exports.UserService = UserService;

@@ -3,6 +3,7 @@ import bcrypt from "bcrypt";
 import { TokenService } from "../service/token_service";
 import { getRepository, UpdateResult } from "typeorm";
 import { Request, Response } from "express";
+import jwt, { JwtPayload } from "jsonwebtoken";
 const tokenService = new TokenService();
 
 export class UserService {
@@ -60,16 +61,18 @@ export class UserService {
     return updateResponse;
   }
   async refresh(refreshToken: string, res: Response) {
-    if(!refreshToken){
-       res.status(401).send("Unautorized");
+    if (!refreshToken) {
+      res.status(401).send("Unautorized");
     }
-    const userData =  tokenService.validtionRefreshToken(refreshToken)
-    const tokenInDB = await tokenService.findeToken(refreshToken)
-    if(!userData || !tokenInDB){
-       res.status(401).send("Unautorized");
+    const userData = tokenService.validtionRefreshToken(refreshToken);
+    const tokenInDB = await tokenService.findeToken(refreshToken);
+    if (!userData || !tokenInDB) {
+      res.status(401).send("Unautorized");
     }
-    const user = await getRepository(User).findOne({refreshToken: tokenInDB?.refreshToken})
-    const id = user?.id
+    const user = await getRepository(User).findOne({
+      refreshToken: tokenInDB?.refreshToken,
+    });
+    const id = user?.id;
     const token = tokenService.generateToken({ id });
     res.cookie("refreshToken", token.refreshToken, {
       maxAge: 30 * 24 * 60 * 60 * 1000,
@@ -77,7 +80,18 @@ export class UserService {
     });
     res.json(token.accessToken);
     res.end();
+  }
+  async info(req: Request, res: Response) {
+    const { refreshToken } = req.cookies;
+    const decodeJWT = jwt.decode(refreshToken)
+    interface dJWT {
+      id: string;
+      iat: number;
+      exp: number;
+    }
+    const id:dJWT = JSON.parse(JSON.stringify(decodeJWT)) 
+    res.json(id.id);
 
-  };
-  
+  }
+    
 }
