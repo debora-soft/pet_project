@@ -4,3 +4,4 @@
 #### Для fутентификации во всех роутах(кроме registration, login, logout) нужно установить header: Authorisation Bearer <token полученный после login>
 #### Для старта приложения npm start 
 #### Для ребилда npm run build
+#### Весь API протестирован в Postman
