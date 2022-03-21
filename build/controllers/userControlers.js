@@ -74,9 +74,9 @@ class userControllers {
     }
     async allFile(req, res, next) {
         const allFile = await fileService.listFile();
-        let list_size = Number(req.params.list_size) | 10;
-        const page = Number(req.params.page) | 1;
-        let offset = page * 10;
+        let list_size = Number(req.query.list_size) | 10;
+        const page = Number(req.query.page) | 1;
+        let offset = page * list_size;
         const fileToReturn = [];
         if (allFile.length === 0) {
             res.json("Not files");
@@ -100,6 +100,14 @@ class userControllers {
             }
             res.json(fileToReturn);
         }
+    }
+    async deleteFile(req, res, next) {
+        const id = req.params.id;
+        await fileService.deleteFile(id, res);
+    }
+    async updateFile(req, res, next) {
+        const id = req.params.id;
+        await fileService.updateFile(id, req, res);
     }
 }
 exports.userControllers = userControllers;

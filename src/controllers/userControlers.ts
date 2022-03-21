@@ -68,14 +68,14 @@ export class userControllers {
   }
   async allFile(req: Request, res: Response, next: NextFunction) {
     const allFile: File[] = await fileService.listFile();
-    let list_size: number = Number(req.params.list_size) | 10;
-    const page: number = Number(req.params.page) | 1;
-    let offset: number = page * 10;
+    let list_size: number = Number(req.query.list_size) | 10;
+    const page: number = Number(req.query.page) | 1;
+    let offset: number = page * list_size;
     const fileToReturn: Array<File> = [];
     if (allFile.length === 0) {
       res.json("Not files");
     } else {
-      const count:number = allFile.length;
+      const count: number = allFile.length;
       if (allFile.length < offset) {
         offset = allFile.length - (offset - allFile.length) - 1;
       }
@@ -94,5 +94,13 @@ export class userControllers {
 
       res.json(fileToReturn);
     }
+  }
+  async deleteFile(req: Request, res: Response, next: NextFunction) {
+    const id: string = req.params.id;
+    await fileService.deleteFile(id, res);
+  }
+  async updateFile(req: Request, res: Response, next: NextFunction) {
+    const id: string = req.params.id;
+    await fileService.updateFile(id, req, res);
   }
 }

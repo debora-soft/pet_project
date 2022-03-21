@@ -18,3 +18,5 @@ exports.routerUser.post('/refresh', controller.refresh);
 exports.routerUser.get('/users', auth_1.accessTokenVerification, controller.users);
 exports.routerUser.post('/file/upload', upload_1.upl.single('filedata'), controller.upload);
 exports.routerUser.get('/file/list', controller.allFile);
+exports.routerUser.delete('/file/delete/:id', controller.deleteFile);
+exports.routerUser.put('/file/update/:id', upload_1.upl.single('filedata'), controller.updateFile);

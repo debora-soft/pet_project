@@ -3,7 +3,7 @@ import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateCol
 @Entity()
 export class File {
   @PrimaryGeneratedColumn("uuid")
-  id!: number;
+  id!: string;
 
   @Column()
   name!: string;
@@ -24,6 +24,5 @@ export class File {
   updateDate!: Date;
 
   @Column()
-  path!: string;
-  
+  path!: string;  
 }
