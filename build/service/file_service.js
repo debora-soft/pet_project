@@ -72,7 +72,6 @@ class FileService {
             fs.unlink(udatedFile.path, async (err) => {
                 var _a, _b, _c, _d, _e;
                 if (err) {
-                    console.log(err);
                     res.json(err);
                     res.end();
                 }
@@ -84,7 +83,9 @@ class FileService {
                         size: (_d = req.file) === null || _d === void 0 ? void 0 : _d.size,
                         path: (_e = req.file) === null || _e === void 0 ? void 0 : _e.path,
                     });
-                    const newFile = await (0, typeorm_1.getRepository)(file_1.File).findOne({ id: udatedFile.id });
+                    const newFile = await (0, typeorm_1.getRepository)(file_1.File).findOne({
+                        id: udatedFile.id,
+                    });
                     if (newFile) {
                         res.json(file_1.File);
                         res.end();
@@ -96,6 +97,17 @@ class FileService {
             });
         }
     }
-    ;
+    async fileInfo(id, req, res) {
+        const fileInfo = await (0, typeorm_1.getRepository)(file_1.File).findOne({
+            id,
+        });
+        if (fileInfo) {
+            res.status(200).json(fileInfo);
+            res.end();
+        }
+        else {
+            res.status(400).json("file not found");
+        }
+    }
 }
 exports.FileService = FileService;

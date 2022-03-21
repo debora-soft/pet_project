@@ -34,45 +34,55 @@ export class FileService {
           if (delFile) {
             res.json("could not delete file information from the database");
             res.end();
+          } else {
+            res.status(200);
+            res.end();
           }
-          else {
-             res.status(200);
-             res.end();
-          }
-         
         }
       });
     }
-    
   }
-  async updateFile(id: string, req:Request, res: Response): Promise<void>{    
+  async updateFile(id: string, req: Request, res: Response): Promise<void> {
     const udatedFile = await getRepository(File).findOne({ id });
-    console.log(udatedFile)
+    console.log(udatedFile);
     if (udatedFile) {
       fs.unlink(udatedFile.path, async (err) => {
         if (err) {
-          console.log(err);
           res.json(err);
           res.end();
-        } else { 
-          await getRepository(File).update({id: udatedFile.id}, {
-            name: req.file?.originalname,
-            file_extension: req.file?.mimetype.split("/")[1],
-            MIME_type: req.file?.mimetype,
-            size: req.file?.size,
-            path: req.file?.path,
+        } else {
+          await getRepository(File).update(
+            { id: udatedFile.id },
+            {
+              name: req.file?.originalname,
+              file_extension: req.file?.mimetype.split("/")[1],
+              MIME_type: req.file?.mimetype,
+              size: req.file?.size,
+              path: req.file?.path,
+            }
+          );
+          const newFile: File | undefined = await getRepository(File).findOne({
+            id: udatedFile.id,
           });
-         const newFile:File | undefined = await getRepository(File).findOne({id: udatedFile.id});
-         if(newFile){
-           res.json(File);
-           res.end();
-         } else {
-          res.status(400).json("the updated file could not be found");
-         }
-         
+          if (newFile) {
+            res.json(File);
+            res.end();
+          } else {
+            res.status(400).json("the updated file could not be found");
+          }
         }
       });
-    } 
-    
-  };
+    }
+  }
+  async fileInfo(id: string, req: Request, res: Response) {
+    const fileInfo: File | undefined = await getRepository(File).findOne({
+      id,
+    });
+    if (fileInfo) {
+      res.status(200).json(fileInfo);
+      res.end();
+    } else {
+      res.status(400).json("file not found");
+    }
+  }
 }

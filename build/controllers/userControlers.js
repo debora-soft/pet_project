@@ -109,5 +109,9 @@ class userControllers {
         const id = req.params.id;
         await fileService.updateFile(id, req, res);
     }
+    async fileInfo(req, res, next) {
+        const id = req.params.id;
+        await fileService.fileInfo(id, req, res);
+    }
 }
 exports.userControllers = userControllers;
