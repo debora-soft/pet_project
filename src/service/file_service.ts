@@ -85,4 +85,18 @@ export class FileService {
       res.status(400).json("file not found");
     }
   }
+  async getFile(id: string, req: Request, res: Response) {
+    const file: File | undefined = await getRepository(File).findOne({
+      id,
+    });
+    if (file) {
+      if (fs.existsSync(file.path)) {
+        res.download(file.path);
+      } else {
+        res.status(400).json("file not found");
+      }
+    } else {
+      res.status(400).json("file not found");
+    }
+  }
 }

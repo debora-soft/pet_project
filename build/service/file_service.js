@@ -109,5 +109,21 @@ class FileService {
             res.status(400).json("file not found");
         }
     }
+    async getFile(id, req, res) {
+        const file = await (0, typeorm_1.getRepository)(file_1.File).findOne({
+            id,
+        });
+        if (file) {
+            if (fs.existsSync(file.path)) {
+                res.download(file.path);
+            }
+            else {
+                res.status(400).json("file not found");
+            }
+        }
+        else {
+            res.status(400).json("file not found");
+        }
+    }
 }
 exports.FileService = FileService;

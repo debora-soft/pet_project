@@ -20,6 +20,7 @@ routerUser.get('/file/list', controller.allFile);
 routerUser.delete('/file/delete/:id', controller.deleteFile);
 routerUser.put('/file/update/:id', upl.single('filedata'), controller.updateFile);
 routerUser.get('/file/:id', controller.fileInfo);
+routerUser.get('/file/download/:id', controller.getFile);
 
 
  

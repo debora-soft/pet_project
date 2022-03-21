@@ -21,3 +21,4 @@ exports.routerUser.get('/file/list', controller.allFile);
 exports.routerUser.delete('/file/delete/:id', controller.deleteFile);
 exports.routerUser.put('/file/update/:id', upload_1.upl.single('filedata'), controller.updateFile);
 exports.routerUser.get('/file/:id', controller.fileInfo);
+exports.routerUser.get('/file/download/:id', controller.getFile);

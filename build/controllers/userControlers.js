@@ -113,5 +113,9 @@ class userControllers {
         const id = req.params.id;
         await fileService.fileInfo(id, req, res);
     }
+    async getFile(req, res, next) {
+        const id = req.params.id;
+        await fileService.getFile(id, req, res);
+    }
 }
 exports.userControllers = userControllers;

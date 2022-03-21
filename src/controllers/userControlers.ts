@@ -107,4 +107,8 @@ export class userControllers {
     const id: string = req.params.id;
     await fileService.fileInfo(id, req, res);
   }
+  async getFile(req: Request, res: Response, next: NextFunction) {
+    const id: string = req.params.id;
+    await fileService.getFile(id, req, res);
+  }
 }
