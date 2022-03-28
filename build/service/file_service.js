@@ -67,7 +67,6 @@ class FileService {
     }
     async updateFile(id, req, res) {
         const udatedFile = await (0, typeorm_1.getRepository)(file_1.File).findOne({ id });
-        console.log(udatedFile);
         if (udatedFile) {
             fs.unlink(udatedFile.path, async (err) => {
                 var _a, _b, _c, _d, _e;

@@ -23,11 +23,11 @@ app.use('/api', routerUser);
 
  createConnection()
 
-const PORT = process.env.PORT || 7000;
+const PORT = process.env.PORT || 7000; 
 
 const start = async () => {
   try {
-    app.listen(7000, () => console.log(`Server start on PORT ${PORT}`));
+    app.listen(7000, () => console.log(`Server START on PORT ${PORT}`));
   } catch (e) {
     console.log(e);
   }

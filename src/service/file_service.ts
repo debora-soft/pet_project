@@ -44,7 +44,6 @@ export class FileService {
   }
   async updateFile(id: string, req: Request, res: Response): Promise<void> {
     const udatedFile = await getRepository(File).findOne({ id });
-    console.log(udatedFile);
     if (udatedFile) {
       fs.unlink(udatedFile.path, async (err) => {
         if (err) {

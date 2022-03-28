@@ -1,18 +1,18 @@
 {
   "module": "esnext",
-  "name": "zimad",
+  "name": "test",
   "version": "1.0.0",
-  "description": "test task",
-  "main": "app.js",
+  "description": "test task", 
+  "main": "src/app.ts",
   "scripts": {
     "build": "tsc",
-    "start": "nodemon build/app.js"
+    "start": "nodemon src/app.ts" 
   },
   "author": "Dmitry Kolosov",
   "license": "ISC",
   "dependencies": {
     "bcrypt": "^5.0.1",
-    "cookie-parser": "^1.4.6",
+    "cookie-parser": "^1.4.6", 
     "cors": "^2.8.5",
     "dotenv": "^16.0.0",
     "express": "^4.17.3",
